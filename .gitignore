@@ -1,17 +1,33 @@
 # Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+autosub_gui/
+ffmpeg/
+gnuwin32/
+inifile/
+logs/
+mingw/
+others/
+python/
+streamlink/
+tmp/
+videos/
+vlc/
+wpy/
 
 # Other files and folders
 .settings/
 
 # Executables
-*.swf
-*.air
-*.ipa
+*.exe
+*.ftp
+*.ini
 *.apk
+*.mp3
+*.mp4
+*.webm
+*.mpeg
+*.ts
+
+cfg.bat
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
