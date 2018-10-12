@@ -12,7 +12,7 @@
 	
 	if not exist "%_tvini%" "%_wget%" "%_tvini_url%"
 	rem empty value of 4/5 ( except 5 th) link keys in the channel
-	for /l %%i in (1,1,4) do %_ini% %_tvini% [%_channel%] _lnk%%i==
+	for /l %%i in (1,1,4) do %_ini% %_tvini% [%_channel%] _lnk[%%i]==
 	
 	if exist "%_tmp_fdr%\%_channel%.*" del "%_tmp_fdr%\%_channel%.*"
 	for /f "tokens=2 delims==" %%x in ( 'set _tvsrc[' ) do (
@@ -30,18 +30,18 @@
 			%_streamlink% -Q "!_clink!" | findstr /i /C:"%_stream_avai%" && (
 				set /a _already_=0
 				for /l %%k in (1,1,!_lnk_n!) do (
-					for /f "delims=" %%a in ('%_ini% %_tvini% [%_channel%] _lnk%%k' ) do %%a
-					set _already_lnk=!_lnk%%k!
+					for /f "delims=" %%a in ('%_ini% %_tvini% [%_channel%] _lnk[%%k]' ) do %%a
+					set _already_lnk=!_lnk[%%k]!
 					echo "!_already_lnk!" | findstr /c:"!_clink!">NUL && (
 					set /a _already_=1
 					echo [ ////////// already added ////////// ] )
 				)
 				if !_already_! equ 0 (
-					%_ini% %_tvini% [%_channel%] _lnk!_lnk_n!=!_clink!
-					if !_lnk_n! leq 1 echo !_streamlink! "--player=!_vlc!" "!_clink!" worst>"!_logs_fdr!\%_channel%.bat"
+					%_ini% %_tvini% [%_channel%] _lnk[!_lnk_n!]=!_clink!
+					if !_lnk_n! leq 1 echo %_streamlink% "--player=%_vlc%" "!_clink!" worst>"%_logs_fdr%\%_channel%.bat"
 					set /a _lnk_n+=1 ) ) || echo [ is not a stream link for record or stream ]
 			set /a _count+=1
-			if !_lnk_n! geq 5 goto lDone
+			if !_lnk_n! geq %_min_lnk_num% goto lDone
 		)
 		set /a _src_n+=1 )
 

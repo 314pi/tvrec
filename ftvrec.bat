@@ -53,11 +53,14 @@
 	if %_mod% leq 1 set /a _mod=1
 	if %_mod% geq 3 set /a _mod=3
 	
+	call :lCountChannelLnk _max_lnk_n %_channel%
+	set /a _max_lnk_n+=1
+	
 	set /a _lnk_n=1
 :lStart
-	if %_lnk_n% geq 6 goto lUpdateUrl
-	for /f "delims=" %%a in ('%_ini% %_tvini% [%_channel%] _lnk%_lnk_n%') do %%a
-	call set "_rec_url=%%_lnk%_lnk_n%%%"
+	if %_lnk_n% geq %_max_lnk_n% goto lUpdateUrl
+	for /f "delims=" %%a in ('%_ini% %_tvini% [%_channel%] _lnk[%_lnk_n%]') do %%a
+	call set "_rec_url=%%_lnk[%_lnk_n%]%%"
 	if not "%_rec_url%"=="" (
 		set "_rec_url=%_rec_url: =%"
 		if "%_rec_url%"=="" (
@@ -246,3 +249,16 @@ rem call :lTimeSubtract sub 10:10:10 09:09:09
 	echo ///////////////////////////////////////////////////////////////////////////////
 	timeout /t 3 > NUL
 	endlocal & if not "%~1"=="" set "%~1=%_best_url%" & exit /b
+
+:lCountChannelLnk _o_count _in_channel
+	@echo off
+	setlocal
+	call cfg.bat
+	
+	set /a _o_count=0
+	set _in_channel=%~2
+	
+	for /f "delims=" %%a in ('%_ini% %_tvini% [%_in_channel%]') do ( %%a )
+	for /f "tokens=2 delims==" %%x in ( 'set _lnk[' ) do set /a _o_count+=1
+	
+	endlocal & if not "%~1"=="" set "%~1=%_o_count%" & exit /b
