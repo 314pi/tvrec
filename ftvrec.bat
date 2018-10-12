@@ -3,13 +3,12 @@
 	call cfg.bat
 	
 	set _dur=03:00:00
-	set _qual=360p,480p,1200k,540p,720p,best
 	
 	set "_channel=%1"
 	set "_mod=%2"
 	if [%1]==[] set "_channel=test"
 	title Record and/or Live TV channel [ %_channel% ]
-	
+
 	if not "x_%1"=="x_auto" goto lManualChannel
 	rem else _channel = auto ( Auto select channel )
 :lAutoChannel
@@ -69,8 +68,7 @@
 	set _rec_name=%_channel%_%date:~0,2%%date:~3,2%_%time:~0,2%%time:~3,2%%time:~6,2%.mp4
 	set _rec_name=%_rec_name: =%
 	set _rec_opt=--hls-segment-threads 10 --hls-duration %_dur%
-	set _ffmpeg_opt=-acodec libmp3lame -ar 44100 -b:a 96k -pix_fmt yuv420p -profile:v baseline -bufsize 6000k -vb 400k -maxrate 1000k -deinterlace -vcodec libx264 -preset veryfast -g 30 -r 25 -crf 30 -f flv
-
+	rem set _ffmpeg_opt= ( cfg.bat )
 	if not "x_%1"=="x_auto" (
 		for /f "delims=" %%a in ('%_ini% %_tvini% [%_channel%] _alu') do %%a
 		set _liveurl=%_alu%
@@ -194,8 +192,8 @@ rem call :lTimeSubtract sub 10:10:10 09:09:09
 	setlocal enableextensions enabledelayedexpansion
 	call cfg.bat
 	set _channel=test
-	for /l %%n in (0,1,%_chan_n%) do (
-		for /f "delims=" %%a in ('%_ini% %_tvini% [!_chan_lst[%%n]!] _acfg') do %%a
+	for /f "tokens=2 delims==" %%x in ( 'set _autochannel[' ) do (
+		for /f "delims=" %%a in ('%_ini% %_tvini% [%%x] _acfg') do %%a
 		if not "!_acfg!"=="" set "_acfg=!_acfg: =!"
 		set /a _count=0
 		call :lCountParts _count !_acfg!
@@ -206,15 +204,14 @@ rem call :lTimeSubtract sub 10:10:10 09:09:09
 			call :lgetTime _now
 			if !_now! gtr !_start! (
 				if !_now! lss !_end! (
-					set _channel=!_chan_lst[%%n]!
+					set _channel=%%x
 					goto lFoundChannel ) )
-		)
-	)
+		) )
 	:lFoundChannel
 	echo [ Auto select channel : %_channel% ]
 	timeout /t 3
 	endlocal & set "%~1=%_channel%" & exit /b
-	
+
 :lCountParts _count _str
 	@echo off
 	setlocal enableextensions enabledelayedexpansion
@@ -226,3 +223,26 @@ rem call :lTimeSubtract sub 10:10:10 09:09:09
 		set /a _count+=1
 		if not "%_str%" == "%_old_str%" goto lPlus
 	endlocal & if not "%~1"=="" set /a "%~1=%_count%" & exit /b
+
+:lBestPing _best_url
+	@echo off
+	setlocal enableextensions enabledelayedexpansion
+	call cfg.bat
+
+	set /a _min=9999
+	set _best_url=
+	echo ///////////////////////////////////////////////////////////////////////////////
+	rem echo website %TAB% ^| %TAB% ping %TAB% ^| %TAB% min ping
+	for /f "tokens=2 delims==" %%i in ( 'set _tvsrc[' ) do (
+		for /f "tokens=4 delims==" %%a in ( 'ping %%i ^| findstr "Average"' ) do ( 
+			set _str=%%a
+			set /a _cmin=!_str:~0,-2!
+			echo %%i !_cmin! !_min!
+			if !_cmin! lss !_min! (
+				set /a _min=!_cmin!
+				set _best_url=%%i )
+		) )
+	echo %_best_url%
+	echo ///////////////////////////////////////////////////////////////////////////////
+	timeout /t 3 > NUL
+	endlocal & if not "%~1"=="" set "%~1=%_best_url%" & exit /b

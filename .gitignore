@@ -12,6 +12,10 @@ tmp/
 videos/
 vlc/
 wpy/
+fonts/
+gimp/
+audios/
+dmapi/
 
 # Other files and folders
 .settings/
@@ -26,6 +30,8 @@ wpy/
 *.webm
 *.mpeg
 *.ts
+*.xcf
+*.ttf
 
 cfg.bat
 

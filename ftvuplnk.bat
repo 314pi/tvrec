@@ -7,7 +7,7 @@
 	set /a _src_n=1
 	set "_channel=%1"
 	if [%1]==[] set "_channel=test"
-	title Update TV link [ %_channel% ]
+	title update tv link [ %_channel% ]
 	
 	if not exist "%_tvini%" "%_wget%" "%_tvini_url%"
 	rem empty value of 4/5 ( except 5 th) link keys in the channel
@@ -33,10 +33,10 @@
 	for /f %%i in (%_tmp_fdr%\%_channel%) do (
 		set _clink=%%i
 		set _clink=!_clink:"=!
-		title Update TV link [ !_channel! ] [ Source no. : !_src_n! ] [ link no. : !_lnk_n! ]
+		title update tv link [ !_channel! ] [ source no. : !_src_n! ] [ link no. : !_lnk_n! ]
 		echo ===============================================================================
 		echo [!_lnk_n!] Source [!_src_n!] link No. !_count! : & echo !_clink!
-		!_streamlink! -Q "!_clink!" | findstr /i /C:"Available streams" && (
+		!_streamlink! -Q "!_clink!" | findstr /i /C:"!_stream_avai!" && (
 			set /a _already_=0
 			for /l %%x in (1,1,!_lnk_n!) do (
 				for /f "delims=" %%a in ('!_ini! !_tvini! [!_channel!] _lnk%%x' ) do %%a
@@ -63,7 +63,7 @@
 	echo //                                                                           //
 	echo ///////////////////////////////////////////////////////////////////////////////
 	rem upload ini file to ftp server
-	if exist ath.ftp ftp -s:ath.ftp
+	if exist %_ftp% ftp -s:%_ftp%
 	
 	endlocal
 	goto :eof
