@@ -15,18 +15,21 @@
 	for /l %%i in (1,1,4) do %_ini% %_tvini% [%_channel%] _lnk[%%i]==
 	
 	if exist "%_tmp_fdr%\%_channel%.*" del "%_tmp_fdr%\%_channel%.*"
-	for /f "tokens=2 delims==" %%x in ( 'set _tvsrc[' ) do (
+	call fpingsrc.bat
+	for /f "delims=" %%a in ('%_ini% %_tvini% [pingsrc]') do ( %%a )
+	
+	for /f "tokens=2 delims==" %%x in ( 'set _pingsrc[' ) do (
 		for /f "delims=" %%a in ('%_ini% %_tvini% [%%x] _%_channel%' ) do %%a
 		call set _src="%%_%_channel%%%"
 		echo ///////////////////////////////////////////////////////////////////////////////
-		echo source [ !_src_n! ]: !_src!
+		echo source [ !_src_n! : !_src! ]
 		call ftvm3u8.bat %_channel% "!_src!"
 		for /f %%i in (%_tmp_fdr%\%_channel%) do (
 			set _clink=%%i
 			set _clink=!_clink:"=!
-			title update tv link [ %_channel% ] [ source no. : !_src_n! ] [ link no. : !_lnk_n! ]
+			title update [ %_channel% ] - [ src: !_src_n! - !_src! ] - [ lnk no. !_lnk_n! ]
 			echo ===============================================================================
-			echo [ !_count! ] Source [!_src_n!] checking no. !_lnk_n! : & echo !_clink!
+			echo [ !_count! ] Source [ !_src_n! ] checking no. !_lnk_n! : & echo !_clink!
 			%_streamlink% -Q "!_clink!" | findstr /i /C:"%_stream_avai%" && (
 				set /a _already_=0
 				for /l %%k in (1,1,!_lnk_n!) do (
