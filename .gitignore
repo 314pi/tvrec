@@ -4,6 +4,7 @@ ffmpeg/
 gnuwin32/
 inifile/
 logs/
+libs/
 mingw/
 others/
 python/
@@ -34,6 +35,7 @@ dmapi/
 *.ttf
 
 cfg.bat
+p4j.txt
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important

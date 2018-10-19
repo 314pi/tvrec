@@ -72,7 +72,7 @@
 	set _rec_name=%_rec_name: =%
 	set _rec_opt=--hls-segment-threads 10 --hls-duration %_dur%
 	rem set _ffmpeg_opt= ( cfg.bat )
-	if not "x_%1"=="x_auto" (
+	if "x_%1"=="x_auto" (
 		for /f "delims=" %%a in ('%_ini% %_tvini% [%_channel%] _alu') do %%a
 		set _liveurl=%_alu%
 	)
