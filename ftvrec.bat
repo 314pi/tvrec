@@ -50,7 +50,7 @@
 		if !_ext_len! geq 2 set /a _liv_mod=%_ext:~1,1%
 		set /a _mod=!_liv_mod!*2 + !_rec_mod!
 	)
-	if %_mod% leq 1 set /a _mod=1
+	if %_mod% leq 1 goto :eof
 	if %_mod% geq 3 set /a _mod=3
 	
 	call :lCountChannelLnk _max_lnk_n %_channel%

@@ -34,7 +34,8 @@ call "%_lib_fdr%\jsort.bat" "%_spath%tmp\%_filename%.lnk" /u > "%_spath%tmp\%_fi
 
 for /f %%i in (%_spath%tmp\%_filename%.lnk) do (
 	echo "%%i" | %_grep% "m3u8" >> "%_spath%tmp\%_filename%" || (
-		"%_wget%" -qO- "%%i" | %_grep% "m3u8" >> "%_spath%tmp\%_filename%" 
+		echo "%%i" | %_grep% "\.php" && (
+			"%_wget%" -qO- "%%i" | %_grep% "m3u8" >> "%_spath%tmp\%_filename%" )
 	)
 )
 
