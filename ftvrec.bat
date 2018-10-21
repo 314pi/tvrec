@@ -214,11 +214,13 @@ rem call :lTimeSubtract 10:10:10 09:09:09 _sub
 			call :lSplitChannelCfg !_scfg! _array
 			set _start=!_array[1]!
 			set _end=!_array[2]!
-			call :lgetTime _now
-			if !_now! gtr !_start! (
-				if !_now! lss !_end! (
-					set _channel=%%x
-					goto lFoundChannel ) )
+			set _sched=!_array[4]!
+			echo "!_sched!" | findstr "%dayofweek%" > NUL && (
+				call :lgetTime _now
+				if !_now! gtr !_start! (
+					if !_now! lss !_end! (
+						set _channel=%%x
+						goto lFoundChannel ) ) )
 		) )
 	:lFoundChannel
 	echo [ Auto select channel : %_channel% ]
