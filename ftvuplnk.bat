@@ -41,6 +41,7 @@
 				)
 				if !_already_! equ 0 (
 					%_ini% %_tvini% [%_channel%] _lnk[!_lnk_n!]=!_clink!
+					%_ini% %_tvini% [%_channel%] _frm[!_lnk_n!]=!_src!
 					if !_lnk_n! leq 1 echo %_streamlink% "--player=%_vlc%" "!_clink!" worst>"%_logs_fdr%\%_channel%.bat"
 					set /a _lnk_n+=1 ) ) || echo [ is not a stream link for record or stream ]
 			set /a _count+=1
@@ -56,7 +57,7 @@
 	echo //                                                                           //
 	echo ///////////////////////////////////////////////////////////////////////////////
 	rem upload ini file to ftp server
-	if exist %_ftp% ftp -s:%_ftp%
+	if exist %_ftp% %_winscp% /script="%_ftp%"
 	
 	endlocal
 	goto :eof

@@ -1,17 +1,17 @@
 	@echo off
 	setlocal & cls
 	call cfg.bat
-	set _s1= 00:02:00
+	set _s1= 00:00:00
 	rem ---------------- QC I
-	set _e1= 00:15:52
-	set _s2= 00:18:21
+	set _e1= 00:00:00
+	set _s2= 00:00:00
 	rem ---------------- QC II
-	set _e2= 00:31:39
-	set _s3= 00:34:12
+	set _e2= 00:00:00
+	set _s3= 00:00:00
 	rem ---------------- END
 	set _e3= 01:58:42
-	set _long=00:59:59
-	set _name=%_spath%cgbg19
+	set _long=00:39:59
+	set _name=%_spath%lmtm18
 	set _name=%_name%.mp4
 	set _in=%_spath%2.mp4
 	rem //////////////////////////////////////
@@ -22,9 +22,7 @@
 	call :lTimeToNumber _s3 %_s3%
 	call :lTimeToNumber _e3 %_e3%
 	rem //////////////////////////////////////
-	cd %_tmp_fdr%
 	set _s4j=s4j.txt
-	set _f4up=up.ftp
 	echo %time:~0,-3% : separating sengments ...
 	"%_ffmpeg%" -y -v error -i %_in% -map 0 -c copy -segment_times %_s1%,%_e1%,%_s2%,%_e2%,%_s3%,%_e3% -f segment -fflags +genpts -reset_timestamps 1 "seg%%d.mp4"
 	del seg0.mp4 seg2.mp4 seg4.mp4
@@ -38,21 +36,29 @@
 	timeout /t 3 /nobreak>NUL
 	"%_ffmpeg%" -v error -i "%_jname%" -ss 00:00:00 -to %_long% -movflags faststart -fflags +genpts -vcodec copy -acodec copy "%_name%"
 	rem ////////////////////////////////////// Upload to FTP server
-	echo open ftp.chuyendungath.vn>%_f4up%
-	echo nhchue5r>>%_f4up%
-	echo FUm9ZEilLF3r9IlNkdEZ>>%_f4up%
-	echo cd /public_html/images/videos/up>>%_f4up%
-	echo binary>>%_f4up%
-	echo put "%_name%">>%_f4up%
-	echo quit>>%_f4up%
-	echo ///////////////////////////////////////////////////////////////////////////////
-	echo %time:~0,-3% : uplooading to ftp server ...
-	ftp -s:%_f4up%
-	timeout /t 5
-	rundll32 user32.dll,MessageBeep
-
+	call :lUpFTP %_name%
+	
+	del %_s4j% %_jname% seg1.mp4 seg3.mp4 seg5.mp4
 	endlocal
 	goto :eof
+
+:lUpFTP _name
+	@echo off
+	setlocal
+	call cfg.bat
+	set _name=%~1
+	set _f4up=up.ftp
+	echo open ftp://nhchue5r:FUm9ZEilLF3r9IlNkdEZ@ftp.chuyendungath.vn/>%_f4up%
+	echo cd "/public_html/images/videos/up">>%_f4up%
+	echo put -transfer=binary "%_name%">>%_f4up%
+	echo exit>>%_f4up%
+	echo ///////////////////////////////////////////////////////////////////////////////
+	echo %time:~0,-3% : uplooading to ftp server ...
+	%_winscp% /script="%_f4up%"
+	timeout /t 5
+	rundll32 user32.dll,MessageBeep
+	del %_f4up%
+	endlocal & exit /b
 
 :lTimeToNumber _num _time
 	@echo off
