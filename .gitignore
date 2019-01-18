@@ -34,6 +34,7 @@ winscp/
 *.ts
 *.xcf
 *.ttf
+*.srt
 
 cfg.bat
 p4j.txt

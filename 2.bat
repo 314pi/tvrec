@@ -1,17 +1,17 @@
 	@echo off
 	setlocal & cls
 	call cfg.bat
-	set _s1= 00:00:00
+	set _s1= 00:02:00
 	rem ---------------- QC I
-	set _e1= 00:00:00
-	set _s2= 00:00:00
+	set _e1= 00:17:07
+	set _s2= 00:21:27
 	rem ---------------- QC II
-	set _e2= 00:00:00
-	set _s3= 00:00:00
+	set _e2= 00:35:13
+	set _s3= 00:36:33 
 	rem ---------------- END
 	set _e3= 01:58:42
-	set _long=00:39:59
-	set _name=%_spath%lmtm18
+	set _long=00:59:59
+	set _name=%_spath%hcv5
 	set _name=%_name%.mp4
 	set _in=%_spath%2.mp4
 	rem //////////////////////////////////////

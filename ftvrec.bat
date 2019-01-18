@@ -30,7 +30,9 @@
 		set /a _dow_count=0 )
 
 :lNoUpdateUrl
-	echo ///////////////////////////////////////////////////////////////////////////////
+	for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
+	call "%_lib_fdr%\nchars.bat" _cols / %_Columns%
+	echo %_cols%
 	if "x_%1"=="x_auto" (
 		for /f "delims=" %%a in ('%_ini% %_myini% [auto%_channel%]') do %%a
 		set _cfg=!_acfg!
@@ -83,15 +85,15 @@
 	
 	if %_mod% equ 1 (
 		title Record [%_channel%] - URL[%_lnk_n%] - [start %time:~0,-6% ] + [ %_dur:~0,-3% ] = [stop %_end%] - [ param: %1 %2 %3 ]
-		%_streamlink% %_rec_opt% "%_in_url%" "%_qual%" --stdout | "%_ffmpeg%" -i pipe:0 -s 640x360 %_ffmpeg_opt% "%_video_fdr%\%_rec_name%" )
+		%_streamlink% %_rec_opt% "%_in_url%" "%_qual%" --stdout | "%_ffmpeg%" -i pipe:0 %_scale% %_ffmpeg_opt% "%_video_fdr%\%_rec_name%" )
 	
 	if %_mod% equ 2 (
 		title Live [%_channel%] - URL[%_lnk_n%] - [start %time:~0,-6% ] + [ %_dur:~0,-3% ] = [stop %_end%] - [ param: %1 %2 %3 ]
-		%_streamlink% %_rec_opt% "%_in_url%" "%_qual%" --stdout | "%_ffmpeg%" -i pipe:0 -s 640x360 %_ffmpeg_opt% "%_out_url%" )
+		%_streamlink% %_rec_opt% "%_in_url%" "%_qual%" --stdout | "%_ffmpeg%" -i pipe:0 %_scale% %_ffmpeg_opt% "%_out_url%" )
 	
 	if %_mod% equ 3 (
 		title Record+Live [%_channel%] - URL[%_lnk_n%] - [start %time:~0,-6% ] + [ %_dur:~0,-3% ] = [stop %_end%] - [ param: %1 %2 %3 ]
-		%_streamlink% %_rec_opt% "%_in_url%" "%_qual%" --stdout | "%_ffmpeg%" -i pipe:0 %_ffmpeg_opt% - | "%_ffmpeg%" -f flv -i - -c copy -f flv "%_out_url%" -s 640x360 -f flv "%_video_fdr%\%_rec_name%" )
+		%_streamlink% %_rec_opt% "%_in_url%" "%_qual%" --stdout | "%_ffmpeg%" -i pipe:0 %_ffmpeg_opt% - | "%_ffmpeg%" -f flv -i - -c copy -f flv "%_out_url%" %_scale% -f flv "%_video_fdr%\%_rec_name%" )
 	
 	call :lgetTime _nowe
 	if "%_nowe%" lss "%_end%" (

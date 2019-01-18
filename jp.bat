@@ -12,5 +12,6 @@ echo ffconcat version 1.0>%_p4j%
 "%_ffmpeg%" -y -i %_p4j% -map 0 -c copy "%_out%"
 rem "%_ffmpeg%" -i %_p4j% -c copy -movflags faststart %_out% -hide_banner
 
+del %_p4j%
 endlocal
 goto :eof

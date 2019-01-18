@@ -3,7 +3,11 @@
 	call cfg.bat
 	
 	%_ini% %_tvini% [pingsrc] /remove
-	echo ///////////////////////////////////////////////////////////////////////////////
+	
+	for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
+	call "%_lib_fdr%\nchars.bat" _cols / %_Columns%
+	echo %_cols%
+	
 	echo checking and sort tv url(s) by ping time ...
 	echo ping time ^| url
 	for /f "tokens=2 delims==" %%i in ( 'set _tvsrc[' ) do (
@@ -12,7 +16,10 @@
 			set /a _pingtime=!_str:~0,-2!
 			call :lCheck !_pingtime! %%i
 		) )
-	echo ///////////////////////////////////////////////////////////////////////////////
+	
+	for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
+	call "%_lib_fdr%\nchars.bat" _cols / %_Columns%
+	echo %_cols%
 	
 	goto :eof
 	endlocal

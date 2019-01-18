@@ -21,14 +21,19 @@
 	for /f "tokens=2 delims==" %%x in ( 'set _pingsrc[' ) do (
 		for /f "delims=" %%a in ('%_ini% %_tvini% [%%x] _%_channel%' ) do %%a
 		call set _src="%%_%_channel%%%"
-		echo ///////////////////////////////////////////////////////////////////////////////
+		for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
+		call "%_lib_fdr%\nchars.bat" _cols / !_Columns!
+		echo !_cols!
 		echo source [ !_src_n! : !_src! ]
 		call ftvm3u8.bat %_channel% "!_src!"
 		for /f %%i in (%_tmp_fdr%\%_channel%) do (
 			set _clink=%%i
 			set _clink=!_clink:"=!
 			title update [ %_channel% ] - [ src: !_src_n! - !_src! ] - [ lnk no. !_lnk_n! ]
-			echo ===============================================================================
+			rem echo ===============================================================================
+			for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
+			call "%_lib_fdr%\nchars.bat" _cols _ !_Columns!
+			echo !_cols!
 			echo [ !_count! ] Source [ !_src_n! ] checking no. !_lnk_n! : & echo !_clink!
 			%_streamlink% -Q "!_clink!" | findstr /i /C:"%_stream_avai%" && (
 				set /a _already_=0
@@ -51,11 +56,13 @@
 
 :lDone
 	set /a _found=%_lnk_n%-1
-	echo ///////////////////////////////////////////////////////////////////////////////
-	echo //                                                                           //
+	for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
+	call "%_lib_fdr%\nchars.bat" _cols / %_Columns%
+	echo %_cols%
+	echo //
 	echo // [ %_channel% ] [ atleast %_found% link(s) found ]
-	echo //                                                                           //
-	echo ///////////////////////////////////////////////////////////////////////////////
+	echo //
+	echo %_cols%
 	rem upload ini file to ftp server
 	if exist %_ftp% %_winscp% /script="%_ftp%"
 	
