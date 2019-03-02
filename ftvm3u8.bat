@@ -1,6 +1,6 @@
 @echo off
 setlocal enableextensions enabledelayedexpansion
-if [%2]==[] goto :eof
+if [%~2]==[] goto :eof
 
 call cfg.bat
 set "_filename=%1"
@@ -14,7 +14,7 @@ type NUL>"%_spath%tmp\%_filename%.src"
 type NUL>"%_spath%tmp\%_filename%.ifr"
 
 rem download source of html page.
-"%_wget%" -qO- %_url%>"%_spath%tmp\%_filename%.src"
+"%_wget%" -T 30 -qO- %_url%>"%_spath%tmp\%_filename%.src"
 
 rem find all 'http...' link in line that contained "function init"
 "%_grep%" -Eo "%_grep_str1%(.*)" "%_spath%tmp\%_filename%.src" >> "%_spath%tmp\%_filename%.fni" && (
@@ -35,7 +35,7 @@ call "%_lib_fdr%\jsort.bat" "%_spath%tmp\%_filename%.lnk" /u > "%_spath%tmp\%_fi
 for /f %%i in (%_spath%tmp\%_filename%.lnk) do (
 	echo "%%i" | %_grep% "m3u8" >> "%_spath%tmp\%_filename%" || (
 		echo "%%i" | %_grep% "\.php" && (
-			"%_wget%" -qO- "%%i" | %_grep% "m3u8" >> "%_spath%tmp\%_filename%" )
+			"%_wget%" -T 30 -qO- "%%i" | %_grep% "m3u8" >> "%_spath%tmp\%_filename%" )
 	)
 )
 
