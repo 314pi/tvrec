@@ -25,6 +25,7 @@
 		call "%_lib_fdr%\nchars.bat" _cols / !_Columns!
 		echo !_cols!
 		echo source [ !_src_n! : !_src! ]
+		type NUL>"%_tmp_fdr%\%_channel%"
 		call :lFindM3U8 %_channel% 1 "!_src!"
 		for /f %%i in (%_tmp_fdr%\%_channel%) do (
 			set _clink=%%i

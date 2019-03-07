@@ -10,7 +10,7 @@ rem set _to_update_lst[5]=htv7
 rem set _to_update_lst[6]=htv9
 rem set _to_update_lst[7]=qpvn
 
-for /f "tokens=2 delims==" %%x in ( 'set _to_update_lst[ ' ) do call ftvuplnk.bat %%x
+for /f "tokens=2 delims==" %%x in ( 'set _to_update_lst[ ' ) do call fupdlnk.bat %%x
 
 endlocal
 goto :eof
