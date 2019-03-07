@@ -35,7 +35,7 @@
 			for /f "Tokens=1,2 delims=: " %%a in ('mode con^|findstr "Columns"') do set _%%a=%%b
 			call "%_lib_fdr%\nchars.bat" _cols _ !_Columns!
 			echo !_cols!
-			echo [ !_count! ] Source [ !_src_n! ] checking no. !_lnk_n! : & echo !_clink!
+			echo [ found !_count! in ] Source [ !_src_n! ] checking no. !_lnk_n! : & echo !_clink!
 			%_streamlink% -Q "!_clink!" | findstr /i /C:"%_stream_avai%" && (
 				set /a _already_=0
 				for /l %%k in (1,1,!_lnk_n!) do (
@@ -90,7 +90,7 @@
 	rem count lines of files
 	for /f %%i in ('type "%_tmp_fdr%\%_filename%.src" ^| find /c /v ""') do set /a _lines=%%i
 	if %_lines% equ 1 (
-		echo [!_level!]: !_url!
+		echo [level !_level!]: !_url!
 		more "%_tmp_fdr%\%_filename%.src"
 		"%_grep%" "m3u8" "%_tmp_fdr%\%_filename%.src" >> "%_tmp_fdr%\%_ofile%"
 		endlocal & exit /b )
