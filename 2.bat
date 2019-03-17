@@ -1,7 +1,7 @@
 	@echo off
 	setlocal & cls
 	call cfg.bat
-	set _s1= 00:13:00
+	set _s1= 00:00:00
 	rem ---------------- QC I
 	set _e1= 00:26:51
 	set _s2= 00:28:56
