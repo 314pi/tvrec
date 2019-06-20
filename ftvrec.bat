@@ -251,7 +251,7 @@ rem call :lTimeSubtract 10:10:10 09:09:09 _sub
 	echo ///////////////////////////////////////////////////////////////////////////////
 	rem echo website %TAB% ^| %TAB% ping %TAB% ^| %TAB% min ping
 	for /f "tokens=2 delims==" %%i in ( 'set _tvsrc[' ) do (
-		for /f "tokens=4 delims==" %%a in ( 'ping %%i ^| findstr "Average"' ) do (
+		for /f "tokens=4 delims==" %%a in ( 'ping -4 %%i ^| findstr "Average"' ) do (
 			set _str=%%a
 			set /a _cmin=!_str:~0,-2!
 			echo %%i !_cmin! !_min!

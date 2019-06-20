@@ -11,7 +11,7 @@
 	echo checking and sort tv url(s) by ping time ...
 	echo ping time ^| url
 	for /f "tokens=2 delims==" %%i in ( 'set _tvsrc[' ) do (
-		for /f "tokens=4 delims==" %%a in ( 'ping %%i ^| findstr "Average"' ) do ( 
+		for /f "tokens=4 delims==" %%a in ( 'ping -4 %%i ^| findstr "Average"' ) do ( 
 			set _str=%%a
 			set /a _pingtime=!_str:~0,-2!
 			call :lCheck !_pingtime! %%i
