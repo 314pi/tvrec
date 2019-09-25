@@ -26,7 +26,7 @@
 	echo [ downloading %_tvini% from ftp server ... ]
 	"%_wget%" -N "%_tvini_url%"
 	if %_dow_count% geq 3 (
-		call fuplnk.bat %_channel%
+		call ftvuplnk.bat %_channel%
 		set /a _dow_count=0 )
 
 :lNoUpdateUrl
